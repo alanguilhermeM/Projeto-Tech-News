@@ -31,8 +31,12 @@ def scrape_updates(html_content):
 
 # Requisito 3
 def scrape_next_page_link(html_content):
-    """Seu código deve vir aqui"""
-    raise NotImplementedError
+    selector = Selector(text=html_content)
+    next_page_link = selector.css(".next.page-numbers::attr(href)").get()
+    if next_page_link:
+        return next_page_link
+    else:
+        return None
 
 
 # Requisito 4
