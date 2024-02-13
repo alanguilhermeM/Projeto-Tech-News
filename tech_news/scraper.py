@@ -1,5 +1,6 @@
 import requests
 import time
+from parsel import Selector
 
 
 # Requisito 1
@@ -17,8 +18,15 @@ def fetch(url):
 
 # Requisito 2
 def scrape_updates(html_content):
-    """Seu código deve vir aqui"""
-    raise NotImplementedError
+    # headers = {"user-agent": "Fake user-agent"}
+    # response = requests.get(html_content, headers=headers)
+    selector = Selector(text=html_content)
+    news = []
+    news = selector.css(".entry-thumbnail div a::attr(href)").getall()
+    # print(news)
+    if len(news) == 0:
+        return []
+    return news
 
 
 # Requisito 3
