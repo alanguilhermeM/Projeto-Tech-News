@@ -2,6 +2,7 @@ import re
 import requests
 import time
 from parsel import Selector
+from .database import insert_or_update, create_news
 
 
 # Requisito 1
@@ -57,11 +58,27 @@ def scrape_news(html_content):
     return data
 
 
-html = fetch('https://blog.betrybe.com/tecnologia/arquivo-bin/')
-print(scrape_news(html))
-
-
 # Requisito 5
 def get_tech_news(amount):
-    """Seu código deve vir aqui"""
-    raise NotImplementedError
+    page_link = 'https://blog.betrybe.com/'
+    list_news = []
+
+    while len(list_news) < amount:
+        html = fetch(page_link)
+        urls = scrape_updates(html)
+
+        for url in urls:
+            html_content = fetch(url)
+            new = scrape_news(html_content)
+            list_news.append(new)
+
+            if len(list_news) >= amount:
+                break
+
+        page_link = scrape_next_page_link(html)
+
+        if not page_link:
+            break
+
+    create_news(list_news)
+    return list_news
