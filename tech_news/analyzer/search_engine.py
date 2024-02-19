@@ -1,5 +1,5 @@
 import re
-from tech_news.database import db
+from tech_news.database import db, search_news
 from datetime import datetime
 
 
@@ -16,7 +16,7 @@ def search_by_date(date):
     try:
         iso_date = datetime.strptime(date, "%Y-%m-%d").strftime("%d/%m/%Y")
         regex_query = re.compile(f'.*{iso_date}.*', re.IGNORECASE)
-        result = list(db.news.find({'timestamp': regex_query}))
+        result = search_news({"timestamp": regex_query})
 
         return [(entry['title'], entry['url']) for entry in result]
     except ValueError:
@@ -25,5 +25,8 @@ def search_by_date(date):
 
 # Requisito 9
 def search_by_category(category):
-    """Seu código deve vir aqui"""
-    raise NotImplementedError
+    regex_query = re.compile(f'.*{category}.*', re.IGNORECASE)
+    result = search_news({"category": regex_query})
+    if len(result) == 0:
+        return []
+    return [(entry['title'], entry['url']) for entry in result]
