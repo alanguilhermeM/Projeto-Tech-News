@@ -2,7 +2,7 @@ import re
 import requests
 import time
 from parsel import Selector
-from .database import insert_or_update, create_news
+from .database import create_news
 
 
 # Requisito 1
